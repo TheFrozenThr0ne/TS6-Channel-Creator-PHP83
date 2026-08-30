@@ -355,12 +355,12 @@ require_once __DIR__ . '/config.php';
 
 
             <button
-                id="lookupButton"
-                class="secondary"
-                type="button"
-            >
-                UID prüfen
-            </button>
+				id="lookupButton"
+				class="secondary"
+				type="button"
+			>
+				UID automatisch erkennen / prüfen
+			</button>
 
         </form>
 
@@ -443,18 +443,33 @@ quality.addEventListener(
  * ============================================================
  */
 
-function status(
-    header,
-    msg = ''
-) {
+function status(header, msg = '', action = null) {
+    statusBox.textContent = '';
 
-    statusBox.textContent =
-        header +
-        (
-            msg
-                ? "\n" + msg
-                : ''
+    const title = document.createElement('strong');
+    title.textContent = header;
+
+    statusBox.appendChild(title);
+
+    if (msg) {
+        statusBox.appendChild(
+            document.createTextNode('\n' + msg)
         );
+    }
+
+    if (action) {
+        statusBox.appendChild(
+            document.createElement('br')
+        );
+
+        const link = document.createElement('a');
+        link.href = action.url;
+        link.textContent = action.text;
+        link.target = '_blank';
+        link.rel = 'noopener';
+
+        statusBox.appendChild(link);
+    }
 }
 
 
@@ -602,7 +617,7 @@ async function tryAutoDetect()
             );
 
 
-            return;
+            return true;
         }
 
 
@@ -619,12 +634,21 @@ async function tryAutoDetect()
             + 'Automatic UID detection failed:',
             error
         );
-
+		
+		const ts3ConnectUrl =
+			<?= json_encode($server_conn_url, JSON_UNESCAPED_SLASHES) ?> +
+			'?port=9987';
 
         status(
-            'UID konnte nicht automatisch erkannt werden.',
-            'Bitte TeamSpeak geöffnet und mit dem Server verbunden lassen. Danach "UID prüfen" klicken.'
-        );
+			'UID konnte nicht automatisch erkannt werden.',
+			'Bitte TeamSpeak öffnen und mit dem Server verbinden.',
+			{
+				text: 'Jetzt mit TeamSpeak Server verbinden',
+				url: ts3ConnectUrl
+			}
+		);
+
+        return false;
     }
 }
 
@@ -635,79 +659,59 @@ async function tryAutoDetect()
  * ============================================================
  */
 
-lookupButton.addEventListener(
-    'click',
-    async () => {
+lookupButton.addEventListener('click', async () => {
+    const value = uuid.value.trim();
 
-        const value =
-            uuid.value.trim();
+    // Wenn keine UID vorhanden ist:
+    // automatische Erkennung erneut versuchen.
+    if (!value) {
+        await tryAutoDetect();
+        return;
+    }
 
+    lookupButton.disabled = true;
 
-        if (!value) {
+    status('Prüfe UID…');
+
+    try {
+        const data = await api(
+            'ajax.php?type=1&uuid=' +
+            encodeURIComponent(value) +
+            '&_=' +
+            Date.now()
+        );
+
+        if (data.uuid) {
+            uuid.value = data.uuid;
 
             status(
-                'Fehler',
-                'Bitte zuerst eine TeamSpeak Unique ID eintragen.'
+                'Hallo ' + (data.name || '') + '!',
+                'TeamSpeak UID ist gültig.'
             );
 
             return;
         }
 
-
-        lookupButton.disabled =
-            true;
-
-
         status(
-            'Prüfe UID…'
+            data.header || 'Fehler',
+            data.msg || 'UID konnte nicht geprüft werden.'
         );
 
+    } catch (error) {
+        console.error(
+            '[TS3 Creator] UID lookup failed:',
+            error
+        );
 
-        try {
+        status(
+            'Fehler',
+            error.message
+        );
 
-            const data =
-                await api(
-                    'ajax.php?type=1&uuid='
-                    + encodeURIComponent(value)
-                    + '&_='
-                    + Date.now()
-                );
-
-
-            status(
-                data.header ||
-                'Antwort',
-
-                data.msg ||
-                (
-                    data.name
-                        ? 'Gefunden: ' + data.name
-                        : ''
-                )
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                '[TS3 Creator] '
-                + 'UID lookup failed:',
-                error
-            );
-
-
-            status(
-                'Fehler',
-                error.message
-            );
-
-        } finally {
-
-            lookupButton.disabled =
-                false;
-        }
+    } finally {
+        lookupButton.disabled = false;
     }
-);
+});
 
 
 /*
