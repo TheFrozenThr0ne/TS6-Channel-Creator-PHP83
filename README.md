@@ -2,6 +2,9 @@
 
 Modernisierte Fassung des ursprünglichen Xuxe/TS3-Channel-Creator.
 
+<img width="2050" height="966" alt="image" src="https://github.com/user-attachments/assets/c8d091d2-69c3-45b5-b603-ee049e667678" />
+
+
 ## Voraussetzungen
 
 - PHP 8.3+
