@@ -364,11 +364,15 @@ require_once __DIR__ . '/config.php';
 
         </form>
 
-
+				
+		<center><p style="margin-top:25px">
+				<a
+                    href="https://github.com/TheFrozenThr0ne/TS3-Channel-Creator-PHP83"
+                >
+                    Github
+                </a> | 
         <?php if ($imprint_url !== ''): ?>
-
-            <p style="margin-top:25px">
-
+		
                 <a
                     href="<?= htmlspecialchars(
                         $imprint_url,
@@ -379,10 +383,8 @@ require_once __DIR__ . '/config.php';
                     Impressum
                 </a>
 
-            </p>
-
         <?php endif; ?>
-
+		</p><center>
     </div>
 
 </div>
