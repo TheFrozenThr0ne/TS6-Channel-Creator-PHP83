@@ -1,0 +1,15 @@
+{
+  "name": "xuxe/ts3-channel-creator",
+  "description": "Modernized TS3 Channel Creator for PHP 8.3+ using the official TeamSpeak PHP Framework.",
+  "type": "project",
+  "license": "MIT",
+  "require": {
+    "php": ">=8.3",
+    "planetteamspeak/ts3-php-framework": "1.3.0",
+    "google/recaptcha": "^1.3"
+  },
+  "config": {
+    "sort-packages": true,
+    "optimize-autoloader": true
+  }
+}
