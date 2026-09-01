@@ -1,93 +1,95 @@
 # TS3 Channel Creator – PHP 8.3+
 
-Modernisierte Fassung des ursprünglichen Xuxe/TS3-Channel-Creator.
+Modernized version of the original Xuxe/TS3-Channel-Creator.
 
 Live Demo: [https://FreeTS3Channel.GamersCentral.de/](https://freets3channel.gamerscentral.de/)
 
 <img width="2050" height="966" alt="image" src="https://github.com/user-attachments/assets/c8d091d2-69c3-45b5-b603-ee049e667678" />
 
+## Requirements
 
-## Voraussetzungen
+* PHP 8.3+
+* Composer
+* TeamSpeak 3 Server 3.4.0+ recommended
+* ServerQuery access
+* PHP extensions: ctype, json, mbstring, openssl
+* For reCAPTCHA: working HTTPS access from the web server to Google
 
-- PHP 8.3+
-- Composer
-- TeamSpeak 3 Server 3.4.0+ empfohlen
-- ServerQuery-Zugang
-- PHP-Erweiterungen: ctype, json, mbstring, openssl
-- Für reCAPTCHA: funktionierender HTTPS-Zugriff vom Webserver zu Google
-
-Das Projekt verwendet **`planetteamspeak/ts3-php-framework` 1.3.x** per Composer und kein mitgeliefertes altes `libs/TeamSpeak3` mehr.
+The project uses **`planetteamspeak/ts3-php-framework` 1.3.x** via Composer and no longer includes the old `libs/TeamSpeak3` library.
 
 ## Installation
 
-1. ZIP entpacken.
-2. Im Ordner ausführen:
+1. Extract the ZIP archive.
+
+2. Run the following command in the project directory:
 
    `composer install --no-dev --optimize-autoloader`
 
-   oder `install.bat` / `install.sh`.
+   or use `install.bat` / `install.sh`.
 
-3. `config.php` bearbeiten. Für lokale/private Einstellungen kann zusätzlich `config.local.php` angelegt werden.
-4. Den Ordner auf den Webserver legen.
-5. Webserver so konfigurieren, dass nur der Projektordner öffentlich erreichbar ist.
+3. Edit `config.php`. For local/private settings, you can additionally create `config.local.php`.
 
-## TeamSpeak-Konfiguration
+4. Upload the directory to your web server.
 
-Die wichtigsten Werte:
+5. Configure the web server so that only the project directory is publicly accessible.
 
-- `ts3_host`
-- `ts3_q_port`
-- `ts3_s_port`
-- `ts3_username`
-- `ts3_password`
-- `cpid`
-- `chadmin_group_id`
-- `allowed_groups`
+## TeamSpeak Configuration
 
-**Wichtig:** `allowed_groups` darf nicht leer sein, wenn Benutzer zugelassen werden sollen.
+The most important settings are:
 
-Beispiel:
+* `ts3_host`
+* `ts3_q_port`
+* `ts3_s_port`
+* `ts3_username`
+* `ts3_password`
+* `cpid`
+* `chadmin_group_id`
+* `allowed_groups`
+
+**Important:** `allowed_groups` must not be empty if users are supposed to be allowed to create channels.
+
+Example:
 
 ```php
 $allowed_groups = [6, 7];
 ```
 
-Verwende möglichst einen eigenen ServerQuery-Benutzer mit nur den benötigten Rechten statt `serveradmin`.
+Whenever possible, use a dedicated ServerQuery user with only the required permissions instead of `serveradmin`.
 
-## UID-Erkennung
+## UID Detection
 
-Die alte Version versucht die UID anhand der IP-Adresse des Webseitenbesuchers zu finden. Das ist nur zuverlässig, wenn TeamSpeak und Webzugriff aus Sicht des TeamSpeak-Servers dieselbe öffentliche IP verwenden.
+The old version attempts to determine the UID based on the IP address of the website visitor. This is only reliable if TeamSpeak and the web connection appear to use the same public IP from the TeamSpeak server's perspective.
 
-Die neue Version:
+The new version:
 
-- versucht weiterhin automatisch per IP zu erkennen;
-- bietet aber zusätzlich eine direkte UID-Prüfung;
-- verwendet beim Erstellen immer `clientGetByUid()`.
+* still attempts automatic detection via IP;
+* additionally provides a direct UID check;
+* always uses `clientGetByUid()` when creating a channel.
 
-Damit funktioniert das Tool auch bei NAT, Proxy, Cloudflare, VPN usw., sofern die UID manuell angegeben wird.
+This means the tool also works with NAT, proxies, Cloudflare, VPNs, etc., as long as the UID is entered manually.
 
 ## PHP 8.3+
 
-Die Anwendung selbst ist auf PHP 8.3+ ausgelegt. Das offizielle TS3 PHP Framework 1.3.0 wurde mit PHP-8.3-Support veröffentlicht.
+The application itself is designed for PHP 8.3+. The official TS3 PHP Framework 1.3.0 was released with PHP 8.3 support.
 
-## Hinweise
+## Notes
 
-- `storage/` muss für PHP beschreibbar sein, wenn der IP-Cooldown aktiviert ist.
-- Wenn reCAPTCHA nicht verwendet werden soll, `public` und `secret` leer lassen. Für eine öffentliche Installation wird reCAPTCHA empfohlen.
-- HTTPS wird für eine öffentliche Installation dringend empfohlen.
+* `storage/` must be writable by PHP if the IP cooldown is enabled.
+* If reCAPTCHA is not required, leave `public` and `secret` empty. For a public installation, reCAPTCHA is recommended.
+* HTTPS is strongly recommended for any public installation.
 
-## Änderungen gegenüber dem Original
+## Changes Compared to the Original
 
-- altes mitgeliefertes TS3 Framework entfernt
-- Composer/TS3 PHP Framework 1.3.x
-- PHP 8.3+ `strict_types`
-- direkte UID-Suche
-- Fehler bei Gruppen-Whitelist behoben
-- Fehler bei PHP-Stringverkettung behoben
-- echtes JSON-POST
-- serverseitige Validierung
-- sicherere Cookie-/Cooldown-Logik
-- moderne Fetch-API statt AngularJS/jQuery
-- reCAPTCHA als Composer-Abhängigkeit
-- IPv6-freundliche ServerQuery-URI
-- Passwörter/UIDs korrekt behandelt
+* Removed the old bundled TS3 framework
+* Composer / TS3 PHP Framework 1.3.x
+* PHP 8.3+ `strict_types`
+* Direct UID lookup
+* Fixed group whitelist issues
+* Fixed PHP string concatenation issues
+* Proper JSON POST handling
+* Server-side validation
+* More secure cookie/cooldown logic
+* Modern Fetch API instead of AngularJS/jQuery
+* reCAPTCHA as a Composer dependency
+* IPv6-friendly ServerQuery URI
+* Proper handling of passwords/UIDs
