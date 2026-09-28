@@ -1,4 +1,4 @@
-# TS3 Channel Creator – PHP 8.3+
+# TS6 Channel Creator – PHP 8.3+
 
 Modernized version of the original Xuxe/TS3-Channel-Creator.
 
