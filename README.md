@@ -2,7 +2,7 @@
 
 Modernized version of the original Xuxe/TS3-Channel-Creator.
 
-Live Demo: [https://FreeTS3Channel.GamersCentral.de/](https://freets3channel.gamerscentral.de/)
+Live Demo: [https://GamersCentral.de/ts6channel/](https://gamerscentral.de/ts6channel/)
 
 <img width="2050" height="966" alt="image" src="https://github.com/user-attachments/assets/c8d091d2-69c3-45b5-b603-ee049e667678" />
 
